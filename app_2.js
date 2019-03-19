@@ -59,6 +59,23 @@ function create() {
     //  Our two animations, walking left and right.
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
+
+    // creating stars
+    stars = game.add.group();
+
+    stars.enableBody = true;
+
+    //  Here we'll create 12 of them evenly spaced apart
+    for (var i = 0; i < 12; i++) {
+        //  Create a star inside of the 'stars' group
+        var star = stars.create(i * 70, 0, 'star');
+
+        //  Let gravity do its thing
+        star.body.gravity.y = 6;
+
+        //  This just gives each star a slightly random bounce value
+        star.body.bounce.y = 0.7 + Math.random() * 0.2;
+    }
 }
 
 function update() {
@@ -91,4 +108,15 @@ function update() {
     if (cursors.up.isDown && player.body.touching.down && hitPlatform) {
         player.body.velocity.y = -350;
     }
+
+    game.physics.arcade.collide(stars, platforms);
+
+    game.physics.arcade.overlap(player, stars, collectStar, null, this);
+}
+
+function collectStar(player, star) {
+
+    // Removes the star from the screen
+    star.kill();
+
 }
